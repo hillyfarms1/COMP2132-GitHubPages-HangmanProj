@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman - Brad Hill</title>
+    
+    <link rel="stylesheet" href="../css/styles.css" type="text/css">
+    <link rel="stylesheet" href="../css/normalize.css" type="text/css">    
+
+    <script src="../scripts/main.js" defer></script>
+
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container">
+        <div class="bgImageWrapper">
+
+            <img src="../images/09.jpg" alt="default background 01" class="bgImage">
+
+            <div class="youWinLose">
+                <img src="../images/25.png" alt="you win message" class="youWin"></img>
+                <img src="../images/24.png" alt="you lose message" class="youLose"></img> 
+            </div>
+            
+            <div class="hint">
+            </div>
+
+            <div class="word">
+            </div>
+            
+            <div class="playAgain">
+                <button aria-label="Play again"><img src="../images/14.png" alt="play again button" class="again"></button>
+                <button aria-label="Reset game"><img src="../images/26.png" alt="reset button" class="reset"></button>
+            </div>
+
+            <div class="ropeHolder">
+                <img src="../images/rope.png" alt="rope graphic" class="rope">
+            </div>
+
+            <div class="handHolder">
+                <img src="../images/hand.png" alt="hand graphic" class="hand">
+            </div>
+
+            <div class="keyboardR1">           
+                <button id="a" aria-label="a" class="a"></button>
+                <button id="b" aria-label="b" class="b"></button>
+                <button id="c" aria-label="c" class="l"></button>
+                <button id="d" aria-label="d" class="l"></button>
+                <button id="e" aria-label="e" class="l"></button>
+                <button id="f" aria-label="f" class="l"></button>
+                <button id="g" aria-label="g" class="l"></button>
+                <button id="h" aria-label="h" class="l"></button>
+                <button id="i" aria-label="i" class="l"></button>
+            </div>
+
+            <div class="keyboardR2">
+                <button id="j" aria-label="j" class="j"></button>
+                <button id="k" aria-label="k" class="k"></button>
+                <button id="l" aria-label="l" class="l"></button>
+                <button id="m" aria-label="m" class="m"></button>
+                <button id="n" aria-label="n" class="l"></button>
+                <button id="o" aria-label="o" class="l"></button>
+                <button id="p" aria-label="p" class="l"></button>
+                <button id="q" aria-label="q" class="l"></button>
+                <button id="r" aria-label="r" class="l"></button>
+            </div>
+            
+            <div class="keyboardR3">
+                <button id="s" aria-label="s" class="s"></button>
+                <button id="t" aria-label="t" class="t"></button>
+                <button id="u" aria-label="u" class="u"></button>
+                <button id="v" aria-label="v" class="l"></button>
+                <button id="w" aria-label="w" class="w"></button>
+                <button id="x" aria-label="x" class="l"></button>
+                <button id="y" aria-label="y" class="l"></button>
+                <button id="z" aria-label="z" class="l"></button>
+            </div>
+        </div>
+        <div class="results">
+        </div>
+    </main>
+
+    <footer></footer>
+    
+</body>
+</html>

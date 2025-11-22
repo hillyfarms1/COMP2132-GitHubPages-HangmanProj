@@ -1,0 +1,312 @@
+button{
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+.container{
+    background-color:#DBA157;
+    width: 100%;
+    min-height: 100vh;
+}
+.bgImageWrapper {
+    position: relative;
+	padding-top: 45px;
+}
+.bgImage{
+    width: 600px;
+    height: 800px;
+    border-radius: 20px;
+    border: solid 5px white;
+    display: block;
+	margin: 0 auto;
+    z-index: -1;
+}
+.playAgain{
+    position: absolute;
+    bottom: 45px;
+    left: 50%;
+    object-fit: cover;
+    display: none;
+}
+.again{
+    width: 70%;
+	transform: translateX(-50%);
+    cursor: pointer;
+}
+.reset{
+	width: 50%;
+	transform: translateX(-50%);
+    cursor: pointer;
+}
+.word{
+    width: 400px;
+    height: 100px;
+    position: absolute;
+    left: 50%;
+    top: 350px;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.letterSpace{
+    width: 50px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-content: center;
+}
+.space{
+    width: 50px;
+    height: 15px;
+}
+.letter{
+    width: 50px;
+    height: 75px;
+}
+.letterI{
+    width: 20px;
+    height: 60px;
+    align-self: center;
+}
+@mixin keyboard($top) {
+    display: flex;
+    height: 50px;
+    position: absolute;
+    top: $top;
+    left: 50%;
+    transform: translateX(-45%);
+}
+.keyboardR1{
+    @include keyboard(480px);
+}
+.keyboardR2{
+    @include keyboard(555px);
+}
+.keyboardR3{
+    @include keyboard(630px);
+}
+.l{
+    width: 42px;
+    cursor: pointer;
+}
+.j, .k, .u, .t{
+    width: 47px;
+    cursor: pointer;
+}
+.a, .b, .m, .s, .w{
+    width: 52px;
+    cursor: pointer;    
+}
+.hint{
+    width: 400px;
+    height: 50px;
+    z-index: 100;
+    position: absolute;
+    left: 50%;
+    top: 280px;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+}
+.hintLetter{
+    width: 20px;
+    height: 37px;
+}
+.hintLetterI{
+    width: 8px;
+    height: 37px;
+}
+.cross{
+    width: 40px;
+    height: 60px;
+    align-self: center;
+}
+.youWinLose{
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(90px);
+    display: none;
+}
+.youWin{
+    width: 125px;
+}
+.youLose{
+    width: 125px;
+}
+.rope{
+    width: 50px;
+    height: 550px;
+    position: relative;
+    top: -25%;
+    left: 2%;
+    align-self: center;
+    pointer-events: none;
+}
+.ropeHolder{
+    width: 200px;
+    height: 555px;
+    transform: translate(-50%, 200px);
+    position: absolute;
+    z-index: 10;
+    top: 100px;
+    left: 50%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+}
+.hand{
+    width: 500px;
+    height: 635px;
+    position: relative;
+    pointer-events: none;
+}
+.handHolder{
+    position: absolute;
+    z-index: 11;
+    transform: translate(-200px, 100px);
+    top: 0%;
+    left: 50%;
+    margin: 0 auto;
+    pointer-events: none;
+    display: none;
+}
+.results{
+    font-family: 'Courier New', Courier, monospace;
+    width: 580px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+@media (max-width: 630px){
+    .bgImage{
+        width: 90vw;
+        height: 120vw;
+        border-radius: 15px;
+        border: solid 4px white;
+		margin: 0 auto 0 auto;
+    }
+	.playAgain{
+        bottom: 40px;
+	}
+    .word{
+        width: 66vw;
+        height: 12vw;
+        top: 60vw;
+    }
+    .letterSpace{
+        width: 7vw;
+        height: 11vw;
+    }
+    .space{
+        width: 7vw;
+        height: 2vw;
+        object-fit: fill;
+    }
+    .letter{
+        width: 7vw;
+        height: 11vw;
+    }
+    .letterI{
+        width: 2vw;
+        height: 8vw;
+        object-fit: fill;
+    }
+    .keyboardR1{
+        height: 10vw;
+        top: 73vw;
+    }
+    .keyboardR2{
+        height: 10vw;
+        top: 84vw;
+    }
+    .keyboardR3{
+        height: 10vw;
+        top: 95vw;
+    }
+    .l{
+        width: 6.3vw;
+    }
+    .j, .k, .u, .t{
+        width: 6.8vw;
+    }
+    .a, .b, .m, .s, .w{
+        width: 7.3vw
+    }
+    .hint{
+        width: 80vw;
+        height: 8vw;
+        top: 50vw;
+    }
+    .hintLetter{
+        width: 4vw;
+        height: 6vw;
+    }
+    .hintLetterI{
+        width: 2vw;
+        height: 6vw;
+}
+    .cross{
+        width: 8vw;
+        height: 10vw;
+    }
+    .youWinLose{
+        top: 20vw;
+        transform: translateX(15vw);
+    }
+    .youWin{
+        width: 20vw;
+    }
+    .youLose{
+        width: 20vw;
+    }
+    .rope{
+        width: 15%;
+        height: 90%;
+    }
+    .ropeHolder{
+        width: 40%;
+        height: 60%;
+        transform: translateX(-50%) translateY(65%);
+        top: -2.5%;
+        left: 50%
+    }
+    .hand{
+        width: 80%;
+        height: 80%;
+        transform: translate(20%, 50%);
+    }
+    .handHolder{
+        height: 30%;
+    }
+    .results{
+        width: 90%;
+}
+}
+
+@media (max-width: 420px){
+    .keyboardR1{
+        top: 78vw;
+    }
+    .keyboardR2{
+        top: 89vw;
+    }
+    .keyboardR3{
+        top: 100vw;
+    }
+    .hand{
+        width: 100%;
+        height: 100%;
+        transform: translate(20%, 50%);
+    }
+    .handHolder{
+        height: 20%;
+    }
+}
