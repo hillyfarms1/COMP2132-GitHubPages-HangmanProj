@@ -136,17 +136,17 @@ function displayHint(){
         if(char === ' '){
             letterImg = '_';
             html += /*html*/ `<div>
-                                <img src="images/${letterImg}.png" alt="hint" class="hintLetter">
+                                <img src="images/${letterImg.toUpperCase()}.png" alt="hint" class="hintLetter">
                             </div>`;
         }else if(char === 'i'){
             letterImg = char;
             html += /*html*/ `<div>
-                                <img src="images/${letterImg}.png" alt="hint" class="hintLetterI">
+                                <img src="images/${letterImg.toUpperCase()}.png" alt="hint" class="hintLetterI">
                             </div>`;
         }else{
             letterImg = char;
             html += /*html*/ `<div>
-                                <img src="images/${letterImg}.png" alt="hint" class="hintLetter">
+                                <img src="images/${letterImg.toUpperCase()}.png" alt="hint" class="hintLetter">
                             </div>`
         };
     });
@@ -158,12 +158,12 @@ function displayWord(){
     word.split('').forEach(function(char){
         if(char === 'i'){
         html += /*html*/`<div class="letterSpace">
-                            <img src="images/${char}.png" alt="letter" class="letterI ltr${char}" style="display: none;">
+                            <img src="images/${char.toUpperCase()}.png" alt="letter" class="letterI ltr${char}" style="display: none;">
                             <img src="images/${Math.floor(Math.random() * 8) + 15}.png" alt="letter space" class="space"> 
                         </div>`                                                     //Plus 15 to align with img file names
         }else{
         html += /*html*/`<div class="letterSpace">
-                            <img src="images/${char}.png" alt="letter" class="letter ltr${char}" style="display: none;">
+                            <img src="images/${char.toUpperCase()}.png" alt="letter" class="letter ltr${char}" style="display: none;">
                             <img src="images/${Math.floor(Math.random() * 8) + 15}.png" alt="letter space" class="space">
                         </div>`                                                     //Plus 15 to align with img file names
         }
