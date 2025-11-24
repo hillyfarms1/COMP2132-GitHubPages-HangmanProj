@@ -214,7 +214,7 @@ button {
   display: none;
 }
 
-.results {
+.results, .cookieWarning {
   font-family: "Courier New", Courier, monospace;
   width: 580px;
   margin: 0 auto;
