@@ -2,22 +2,24 @@ const bgImage = document.querySelector(".bgImage");
 
 let words;
 let word;
-let hint;
+let hint = '';
 let wordsHints;
 let wordCount = 0;
 
 const guessedLetters = new Set();
 let guessedLetter;
-let incorrectGuesses = 1;       //starts at 1 to align with img file names
+let incorrectGuesses = 0;
 let correctGuesses = 0;
 let gamesPlayed = 0;
 let gamesWon = 0;
-let totalIncorrectGuesses = -1;     //starts at -1 because incorrectGuesses starts at 1, see above
+let gamesLost = 0;
+let totalIncorrectGuesses = 0;
 let incorrectGuessesPerGame = 0;
 let isGameOver = false;
 
 let rope = document.querySelector('.rope');
 let ropeHolder = document.querySelector('.ropeHolder');
+let ropeAnimation = null;
 
 const again = document.querySelector(".again");
 const reset = document.querySelector(".reset");
@@ -25,34 +27,103 @@ const hintBox = document.querySelector(".hint");
 const wordBox = document.querySelector(".word");
 const youLose = document.querySelector('.youLose');
 const youWin = document.querySelector('.youWin');
+const results = document.querySelector('.results');
+const cookieWarning = document.querySelector('.cookieWarning');
 
-async function manageStartUI(){
-    bgImage.src = `images/09.jpg`;
+
+
+async function manageStart(skipCookieLoad = false){
+    setStartUI();
+    initRope();
+
+    let hasExistingData = false;
+    if (!skipCookieLoad) {
+        hasExistingData = await loadFromCookie();
+    }
+    if (!hasExistingData){
+        await getRandomWordList();
+        displayResults();
+    }
+
+    const cookieData = {
+        wordList: words,
+        gamesPlayed: gamesPlayed,
+        totalIncorrectGuesses: totalIncorrectGuesses,
+        gamesWon: gamesWon,
+        wordCount: wordCount
+    };
+    document.cookie = `gameData=${encodeURIComponent(JSON.stringify(cookieData))}; max-age=7889400; path=/`; //3months
+
+    bgImage.addEventListener('click', startNewGame);
+
+    let html = '';    
+    html += /*html*/`<p>This game uses cookies to store your results so they persist if you want to play over multiple sessions.
+                        </p>`;
+    cookieWarning.innerHTML = html;
+};
+
+
+function setStartUI(){
+    bgImage.src = `images/08.jpg`;
     bgImage.style.cursor = 'pointer';
+    cookieWarning.style.display = 'block';
     again.style.display = 'none';
     reset.style.display = 'none';
     hintBox.style.display = 'none';
     wordBox.style.display = 'none';
     youWin.style.display = 'none';
     youLose.style.display = 'none';
+    results.style.display = 'none';
     document.querySelector('.keyboardR1').style.display = 'none';
     document.querySelector('.keyboardR2').style.display = 'none';
     document.querySelector('.keyboardR3').style.display = 'none';
+};
 
-    bgImage.addEventListener('click', startNewGame);
-    initRope();
-    await getRandomWordList();
+function resetScores(){
+    document.cookie = "gameData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    wordCount = 0;
+    gamesPlayed = 0;
+    totalIncorrectGuesses = 0;
+    incorrectGuesses = 0;
+    gamesLost = 0;
+    gamesWon = 0;
+    incorrectGuessesPerGame = 0;
+    words = null;
+    wordsHints = null;
+    ropeHolder.style.display = 'flex';
+    manageStart(true);
+};
 
-    //const cookieData = {"wordList": words, "gamesPlayed": gamesPlayed, "totalIncorrectGuesses": totalIncorrectGuesses, "gamesWon": gamesWon};
-}
+async function loadFromCookie(){
+    const cookieString = document.cookie;
+    const cookies = cookieString.split(';').map(cookie => cookie.trim());
+    const gameDataCookie = cookies.find(cookie => cookie.startsWith('gameData='));
+    
+    if (gameDataCookie){
+        const jsonString = decodeURIComponent(gameDataCookie.substring('gameData='.length));
+        const data = JSON.parse(jsonString);
+        const response = await fetch('data/wordsHints.json');
+        wordsHints = await response.json();
+            
+        words = data.wordList;
+        gamesPlayed = data.gamesPlayed;
+        totalIncorrectGuesses = data.totalIncorrectGuesses;
+        gamesWon = data.gamesWon;
+        wordCount = data.wordCount;
+        displayResults();
+        return true;
+    }
+    return false;
+};
 
-function startNewGame(){
+function setGameUI(){
     ropeHolder.style.display = 'none';
     again.style.display = 'none'; 
     youWin.style.display = 'none'; 
     youLose.style.display = 'none';
     bgImage.removeEventListener('click', startNewGame);
     again.removeEventListener('click', startNewGame);
+    cookieWarning.style.display = 'none';
     guessedLetters.forEach(function(letter){
         const cross = document.querySelector(`#${letter} .cross`);
         cross.remove();
@@ -64,29 +135,34 @@ function startNewGame(){
     document.querySelector('.keyboardR3').style.display = 'flex'; 
     document.querySelector('.playAgain').style.display = 'block';
     document.querySelector('.youWinLose').style.display = 'block';   
-    bgImage.src = `images/01.jpg`;
+    bgImage.src = `images/00.jpg`;
     bgImage.style.cursor = 'auto';
     hintBox.style.display = 'flex';
     wordBox.style.display = 'flex';
     reset.style.display = 'block';
-    reset.addEventListener('click', startNewGame);
+    results.style.display = 'block';
+    reset.addEventListener('click', resetScores);
+    document.removeEventListener('keydown', handleEnter);   
+};
+
+function startNewGame(){
     isGameOver = false;
-    incorrectGuesses = 1;       //starts at 1 to align with img file names
+    incorrectGuesses = 0;
     correctGuesses = 0;
-    word = words[wordCount]
+    word = words[wordCount];
     hint = wordsHints[word];
     wordCount++
 
+    setGameUI()
     displayHint();
     displayWord();
-    listenForInput();
-}
+    listenForInput();  
+};
 
-function initRope() {
+function initRope(){
     let movingUp = true;
     let position = 0;
     let counter = 0;
-    let ropeAnimation;
     
     function moveRope() {
         counter++;
@@ -109,20 +185,20 @@ function initRope() {
         }
     }
     ropeAnimation = requestAnimationFrame(moveRope);
-}
+};
 
-async function getRandomWordList() {
+async function getRandomWordList(){
     const response = await fetch('data/wordsHints.json');
     wordsHints = await response.json();
     words = Object.keys(wordsHints);
 
-    let j, x, i;
+    let j, x, i;                                //copied from course notes
     //loop through the entire array
     for (i = words.length - 1; i > 0; i--) {
-        //randomly select a card
+        //randomly select a word
         j = Math.floor(Math.random() * (i + 1));
         x = words[i];
-        //resort cards
+        //resort words
         words[i] = words[j];
         words[j] = x;
     }  
@@ -136,17 +212,17 @@ function displayHint(){
         if(char === ' '){
             letterImg = '_';
             html += /*html*/ `<div>
-                                <img src="images/${letterImg.toUpperCase()}.png" alt="hint" class="hintLetter">
+                                <img src="images/${letterImg}.png" alt="hint" class="hintLetter">
                             </div>`;
         }else if(char === 'i'){
             letterImg = char;
             html += /*html*/ `<div>
-                                <img src="images/${letterImg.toUpperCase()}.png" alt="hint" class="hintLetterI">
+                                <img src="images/${letterImg}.png" alt="hint" class="hintLetterI">
                             </div>`;
         }else{
             letterImg = char;
             html += /*html*/ `<div>
-                                <img src="images/${letterImg.toUpperCase()}.png" alt="hint" class="hintLetter">
+                                <img src="images/${letterImg}.png" alt="hint" class="hintLetter">
                             </div>`
         };
     });
@@ -158,12 +234,12 @@ function displayWord(){
     word.split('').forEach(function(char){
         if(char === 'i'){
         html += /*html*/`<div class="letterSpace">
-                            <img src="images/${char.toUpperCase()}.png" alt="letter" class="letterI ltr${char}" style="display: none;">
+                            <img src="images/${char}.png" alt="letter" class="letterI ltr${char}" style="display: none;">
                             <img src="images/${Math.floor(Math.random() * 8) + 15}.png" alt="letter space" class="space"> 
                         </div>`                                                     //Plus 15 to align with img file names
         }else{
         html += /*html*/`<div class="letterSpace">
-                            <img src="images/${char.toUpperCase()}.png" alt="letter" class="letter ltr${char}" style="display: none;">
+                            <img src="images/${char}.png" alt="letter" class="letter ltr${char}" style="display: none;">
                             <img src="images/${Math.floor(Math.random() * 8) + 15}.png" alt="letter space" class="space">
                         </div>`                                                     //Plus 15 to align with img file names
         }
@@ -184,7 +260,7 @@ function listenForInput(){
             processGuess();
         }});
     });
-}
+};
 
 function processGuess(){
     if(/^[a-z]$/.test(guessedLetter) && !guessedLetters.has(guessedLetter) && !isGameOver){
@@ -205,17 +281,19 @@ function processGuess(){
             reset.style.display = 'none'; 
             again.style.display = 'block';
             again.addEventListener('click', startNewGame);
+            document.addEventListener('keydown', handleEnter);
         }
         if(word.indexOf(guessedLetter) < 0){                                        //if incorrect guess
             incorrectGuesses++;
             initHandIncorrect();                                                     //increment guess count
-            if(incorrectGuesses === 8){                                             //if max guesses end game
+            if(incorrectGuesses === 7){                                             //if max guesses end game
                 isGameOver = true;
                 updateTotals();
                 youLose.style.display = 'block';                                    //you lose screen
                 reset.style.display = 'none'; 
                 again.style.display = 'block';
-                again.addEventListener('click', startNewGame);  
+                again.addEventListener('click', startNewGame);
+                document.addEventListener('keydown', handleEnter);                
             };
             bgImage.src = `images/0${incorrectGuesses}.jpg`;                     //change hangman image
         };
@@ -225,17 +303,34 @@ function updateTotals(){
     gamesPlayed++;
     totalIncorrectGuesses += incorrectGuesses;
     incorrectGuessesPerGame = totalIncorrectGuesses / gamesPlayed;
-    let gamesLost = gamesPlayed - gamesWon;
+    gamesLost = gamesPlayed - gamesWon;
 
-    let html = '';
-    const results = document.querySelector('.results');
-    
-    html += /*html*/`<p><strong>Games played:</strong> ${gamesPlayed} out of 100. <strong>Games won/lost:</strong> ${gamesWon}/${gamesLost} <br><strong>Incorrect guesses per game:</strong> ${incorrectGuessesPerGame}
+    displayResults();
+
+    const cookieData = {
+        wordList: words, 
+        gamesPlayed: gamesPlayed, 
+        totalIncorrectGuesses: totalIncorrectGuesses, 
+        gamesWon: gamesWon,
+        wordCount: wordCount
+    };
+    document.cookie = `gameData=${encodeURIComponent(JSON.stringify(cookieData))}; max-age=7889400; path=/`;
+};
+
+function displayResults(){
+    let html = '';    
+    html += /*html*/`<p><strong>Games played:</strong> ${gamesPlayed} out of ${words.length}. <strong>Games won/lost:</strong> ${gamesWon}/${gamesLost} <br><strong>Incorrect guesses per game:</strong> ${incorrectGuessesPerGame.toFixed(2)};
                         </p>`;
     results.innerHTML = html;
-}
+};
 
-manageStartUI();
+function handleEnter(e) {
+    if (e.key === 'Enter') {
+        startNewGame();
+    }
+};
+
+manageStart();
 
 class HandAnimation {
     constructor(config) {
@@ -294,9 +389,9 @@ class HandAnimation {
             this.handElement.style.display = 'none';
         }
     }
-}
+};
 
-function initHandCorrect() {
+function initHandCorrect(){
     const letterAnim = new HandAnimation({
         startUd: 16,        //must be multiple of udSpeed
         lrSpeed: 10,        //must be multiple of lr
@@ -318,9 +413,9 @@ function initHandCorrect() {
     letterAnim.start().then(function(){
         wordAnim.start();
     });
-}
+};
 
-function initHandIncorrect() {
+function initHandIncorrect(){
     const letterAnim = new HandAnimation({
         startUd: 16,        //see note above about multiples
         lrSpeed: 10,
@@ -342,4 +437,4 @@ function initHandIncorrect() {
     letterAnim.start().then(function(){
         pictureAnim.start()
     });
-}
+};

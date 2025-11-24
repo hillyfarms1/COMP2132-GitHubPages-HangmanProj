@@ -13,22 +13,21 @@
 </head>
 
 <body>
-    <header></header>
 
     <main class="container">
         <div class="bgImageWrapper">
 
-            <img src="images/09.jpg" alt="default background 01" class="bgImage">
+            <img src="images/09.jpg" alt="default background 01" class="bgImage" aria-label="Hangman Game Intro Screen">
 
             <div class="youWinLose">
-                <img src="images/25.png" alt="you win message" class="youWin"></img>
-                <img src="images/24.png" alt="you lose message" class="youLose"></img> 
+                <img src="images/25.png" alt="you win message" class="youWin" aria-label="You Win"></img>
+                <img src="images/24.png" alt="you lose message" class="youLose" aria-label="You Lose"></img> 
             </div>
             
-            <div class="hint">
+            <div class="hint" aria-label="Word hint">
             </div>
 
-            <div class="word">
+            <div class="word" aria-label="Word to guess">
             </div>
             
             <div class="playAgain">
@@ -44,7 +43,7 @@
                 <img src="images/hand.png" alt="hand graphic" class="hand">
             </div>
 
-            <div class="keyboardR1">           
+            <div class="keyboardR1" aria-label="Input keyboard first row">           
                 <button id="a" aria-label="a" class="a"></button>
                 <button id="b" aria-label="b" class="b"></button>
                 <button id="c" aria-label="c" class="l"></button>
@@ -56,7 +55,7 @@
                 <button id="i" aria-label="i" class="l"></button>
             </div>
 
-            <div class="keyboardR2">
+            <div class="keyboardR2" aria-label="Input keyboard second row">
                 <button id="j" aria-label="j" class="j"></button>
                 <button id="k" aria-label="k" class="k"></button>
                 <button id="l" aria-label="l" class="l"></button>
@@ -68,7 +67,7 @@
                 <button id="r" aria-label="r" class="l"></button>
             </div>
             
-            <div class="keyboardR3">
+            <div class="keyboardR3" aria-label="Input keyboard third row">
                 <button id="s" aria-label="s" class="s"></button>
                 <button id="t" aria-label="t" class="t"></button>
                 <button id="u" aria-label="u" class="u"></button>
@@ -79,11 +78,11 @@
                 <button id="z" aria-label="z" class="l"></button>
             </div>
         </div>
-        <div class="results">
+        <div class="results" aria-label="Results">
+        </div>
+        <div class="cookieWarning" aria-label="Cookie warning">
         </div>
     </main>
-
-    <footer></footer>
     
 </body>
 </html>
